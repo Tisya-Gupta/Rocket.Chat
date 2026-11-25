@@ -3,867 +3,800 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rocket.Chat - Live Theme Preview | Tisya Gupta</title>
+  <title>Rocket.Chat</title>
   <link rel="icon" href="https://rocket.chat/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* Rocket.Chat Fuselage Design System Palette */
     :root {
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       
-      /* Default Light Palette */
+      /* Light Theme (Default) */
       --rc-bg: #f7f8fa;
       --rc-surface: #ffffff;
       --rc-surface-hover: #f2f3f5;
+      --rc-surface-tint: #f2f3f5;
+      --rc-header-bg: #ffffff;
       --rc-sidebar-bg: #1f2329;
-      --rc-sidebar-text: #9ea2a8;
-      --rc-sidebar-active: #2f343d;
-      --rc-sidebar-active-text: #ffffff;
-      --rc-text-primary: #1f2329;
+      --rc-sidebar-item: #9ea2a8;
+      --rc-sidebar-item-hover: #262931;
+      --rc-sidebar-item-active: #2f343d;
+      --rc-sidebar-item-active-text: #ffffff;
+      --rc-text-primary: #2f343d;
       --rc-text-secondary: #6c727a;
+      --rc-text-annotation: #9ea2a8;
       --rc-border: #e4e7ea;
+      --rc-border-light: #f2f3f5;
       --rc-primary: #156ff7;
       --rc-primary-hover: #0c57d8;
+      --rc-primary-active: #0947b2;
       --rc-danger: #ec0d38;
       --rc-success: #2de0a5;
-      --rc-badge-bg: #f2f3f5;
-      --rc-badge-text: #2f343d;
-      --rc-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --rc-warning: #ffd21f;
       --rc-card-border: 1px solid #e4e7ea;
+      --rc-radio-border: #cbced1;
     }
 
     [data-theme="dark"] {
+      /* Dark Theme */
       --rc-bg: #111317;
       --rc-surface: #1a1d22;
-      --rc-surface-hover: #262a30;
+      --rc-surface-hover: #23272e;
+      --rc-surface-tint: #23272e;
+      --rc-header-bg: #1a1d22;
       --rc-sidebar-bg: #15181c;
-      --rc-sidebar-text: #9ea2a8;
-      --rc-sidebar-active: #272c34;
-      --rc-sidebar-active-text: #ffffff;
+      --rc-sidebar-item: #9ea2a8;
+      --rc-sidebar-item-hover: #20242a;
+      --rc-sidebar-item-active: #272c34;
+      --rc-sidebar-item-active-text: #ffffff;
       --rc-text-primary: #f2f3f5;
       --rc-text-secondary: #9ea2a8;
+      --rc-text-annotation: #6c727a;
       --rc-border: #2f343d;
+      --rc-border-light: #23272e;
       --rc-primary: #3884f8;
       --rc-primary-hover: #5093f9;
+      --rc-primary-active: #66a1fa;
       --rc-danger: #f5455c;
       --rc-success: #2de0a5;
-      --rc-badge-bg: #272c34;
-      --rc-badge-text: #d7dbe0;
-      --rc-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+      --rc-warning: #ffd21f;
       --rc-card-border: 1px solid #2f343d;
+      --rc-radio-border: #6c727a;
     }
 
     [data-theme="high-contrast"] {
+      /* High Contrast Accessibility Palette */
       --rc-bg: #000000;
-      --rc-surface: #0a0a0a;
-      --rc-surface-hover: #1f1f1f;
+      --rc-surface: #000000;
+      --rc-surface-hover: #1c1c1c;
+      --rc-surface-tint: #1c1c1c;
+      --rc-header-bg: #000000;
       --rc-sidebar-bg: #000000;
-      --rc-sidebar-text: #ffff00;
-      --rc-sidebar-active: #2b2b00;
-      --rc-sidebar-active-text: #ffffff;
+      --rc-sidebar-item: #ffff00;
+      --rc-sidebar-item-hover: #2b2b00;
+      --rc-sidebar-item-active: #3b3b00;
+      --rc-sidebar-item-active-text: #ffffff;
       --rc-text-primary: #ffffff;
       --rc-text-secondary: #ffff00;
+      --rc-text-annotation: #ffffff;
       --rc-border: #ffff00;
+      --rc-border-light: #ffff00;
       --rc-primary: #00ffff;
       --rc-primary-hover: #66ffff;
+      --rc-primary-active: #99ffff;
       --rc-danger: #ff0055;
       --rc-success: #00ff66;
-      --rc-badge-bg: #222222;
-      --rc-badge-text: #ffffff;
-      --rc-shadow: 0 0 0 2px #ffff00;
+      --rc-warning: #ffff00;
       --rc-card-border: 2px solid #ffff00;
+      --rc-radio-border: #ffff00;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: var(--font-sans);
+    }
+
+    body {
       background-color: var(--rc-bg);
       color: var(--rc-text-primary);
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: background-color 0.15s ease, color 0.15s ease;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Banner / Submission Info Bar */
-    .eval-banner {
-      background: #1f2329;
-      color: #ffffff;
-      padding: 10px 24px;
+    /* Rocket.Chat Top Navigation Bar */
+    .rc-topbar {
+      height: 48px;
+      background: var(--rc-header-bg);
+      border-bottom: 1px solid var(--rc-border);
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      font-size: 13px;
-      border-bottom: 1px solid #2f343d;
-    }
-    .eval-banner strong { color: #2de0a5; }
-    .eval-badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .badge {
-      background: #2f343d;
-      color: #e4e7ea;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-family: var(--font-mono);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: background 0.2s;
-    }
-    .badge:hover { background: #3a404a; }
-    .badge-green { background: rgba(45, 224, 165, 0.2); color: #2de0a5; border: 1px solid rgba(45, 224, 165, 0.4); }
-
-    /* Main App Layout */
-    .app-container {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 45px);
-      overflow: hidden;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 260px;
-      background: var(--rc-sidebar-bg);
-      color: var(--rc-sidebar-text);
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--rc-border);
+      padding: 0 16px;
       flex-shrink: 0;
+      z-index: 100;
     }
-    .sidebar-header {
-      padding: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .topbar-left {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .sidebar-logo {
-      width: 32px;
-      height: 32px;
-      background: #f5455c;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 18px;
-    }
-    .workspace-info h3 { font-size: 14px; color: #fff; font-weight: 600; }
-    .workspace-info p { font-size: 11px; color: #9ea2a8; }
 
-    .sidebar-channels {
-      padding: 12px 8px;
-      flex: 1;
-      overflow-y: auto;
-    }
-    .sidebar-section-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 8px;
-      color: #6c727a;
-      font-weight: 600;
-    }
-    .channel-item {
+    .rc-logo-badge {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
-      border-radius: 6px;
-      font-size: 13px;
-      color: var(--rc-sidebar-text);
       cursor: pointer;
-      margin-bottom: 2px;
-      transition: background 0.15s;
-    }
-    .channel-item:hover { background: rgba(255, 255, 255, 0.05); }
-    .channel-item.active {
-      background: var(--rc-sidebar-active);
-      color: var(--rc-sidebar-active-text);
-      font-weight: 500;
     }
 
-    .user-profile-bar {
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.2);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    .rc-logo-badge svg {
+      width: 24px;
+      height: 24px;
+      fill: #f5455c;
+    }
+
+    .rc-logo-text {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.2px;
+      color: var(--rc-text-primary);
+    }
+
+    .topbar-search {
       display: flex;
       align-items: center;
-      gap: 10px;
+      background: var(--rc-surface-tint);
+      border: 1px solid var(--rc-border);
+      border-radius: 4px;
+      padding: 4px 10px;
+      width: 320px;
+      gap: 8px;
+      color: var(--rc-text-secondary);
+      font-size: 12px;
     }
-    .avatar {
-      width: 34px;
-      height: 34px;
+
+    .topbar-search svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--rc-text-secondary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--rc-text-secondary);
+      transition: background 0.15s;
+    }
+
+    .icon-btn:hover {
+      background: var(--rc-surface-hover);
+      color: var(--rc-text-primary);
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .user-avatar-btn {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: #156ff7;
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 600;
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 700;
       position: relative;
+      cursor: pointer;
     }
-    .status-dot {
+
+    .avatar-status-badge {
       width: 9px;
       height: 9px;
-      background: #2de0a5;
       border-radius: 50%;
+      background: var(--rc-success);
       position: absolute;
-      bottom: 0;
-      right: 0;
-      border: 2px solid var(--rc-sidebar-bg);
+      bottom: -1px;
+      right: -1px;
+      border: 2px solid var(--rc-header-bg);
     }
-    .user-info { flex: 1; }
-    .user-info .name { font-size: 13px; color: #fff; font-weight: 600; }
-    .user-info .role { font-size: 11px; color: #9ea2a8; }
 
-    /* Main Workspace Area */
-    .workspace-area {
+    /* Main App Layout */
+    .rc-layout {
+      display: flex;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: var(--rc-bg);
-    }
-
-    /* Workspace Header */
-    .workspace-header {
-      padding: 12px 24px;
-      background: var(--rc-surface);
-      border-bottom: 1px solid var(--rc-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .workspace-header h2 {
-      font-size: 16px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .header-actions { display: flex; gap: 8px; }
-
-    /* Content Layout (Chat vs Settings vs Code Inspector) */
-    .workspace-content {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 440px;
+      height: calc(100vh - 48px);
       overflow: hidden;
     }
 
-    /* Chat Channel Simulation */
-    .chat-view {
+    /* Left Sidebar */
+    .rc-sidebar {
+      width: 250px;
+      background: var(--rc-sidebar-bg);
+      color: var(--rc-sidebar-item);
       display: flex;
       flex-direction: column;
-      background: var(--rc-bg);
+      flex-shrink: 0;
       border-right: 1px solid var(--rc-border);
-      overflow: hidden;
-    }
-    .chat-messages {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .message-bubble {
-      display: flex;
-      gap: 12px;
-      max-width: 85%;
-    }
-    .msg-content {
-      background: var(--rc-surface);
-      border: var(--rc-card-border);
-      padding: 12px 16px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    }
-    .msg-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-    .msg-author { font-size: 13px; font-weight: 600; color: var(--rc-text-primary); }
-    .msg-time { font-size: 11px; color: var(--rc-text-secondary); }
-    .msg-body { font-size: 13px; line-height: 1.5; color: var(--rc-text-primary); }
-
-    .chat-input-bar {
-      padding: 16px 24px;
-      background: var(--rc-surface);
-      border-top: 1px solid var(--rc-border);
-    }
-    .chat-input-box {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 6px;
-      border: 1px solid var(--rc-border);
-      background: var(--rc-bg);
-      color: var(--rc-text-primary);
-      font-size: 13px;
-      outline: none;
     }
 
-    /* Accessibility & Appearance Settings Panel */
-    .settings-panel {
-      background: var(--rc-surface);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      box-shadow: var(--rc-shadow);
-      z-index: 10;
-    }
-    .settings-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--rc-border);
-    }
-    .settings-header h3 { font-size: 18px; font-weight: 700; color: var(--rc-text-primary); }
-    .settings-header p { font-size: 13px; color: var(--rc-text-secondary); margin-top: 4px; }
-
-    .settings-body {
-      padding: 24px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .form-group-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--rc-text-primary);
-      margin-bottom: 12px;
+    .sidebar-header-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .live-status-pill {
-      font-size: 11px;
-      background: rgba(21, 111, 247, 0.15);
-      color: var(--rc-primary);
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 500;
+
+    .workspace-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
     }
 
-    /* Radio Theme Cards */
-    .theme-options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .workspace-sub {
+      font-size: 11px;
+      color: #9ea2a8;
+      margin-top: 2px;
     }
-    .theme-radio-card {
+
+    .sidebar-menu-list {
+      padding: 12px 8px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .menu-group-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6c727a;
+      padding: 8px;
+    }
+
+    .sidebar-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid var(--rc-border);
-      border-radius: 8px;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 13px;
       cursor: pointer;
-      background: var(--rc-surface);
-      transition: all 0.15s ease;
+      color: var(--rc-sidebar-item);
+      margin-bottom: 2px;
+      transition: background 0.15s;
+    }
+
+    .sidebar-item:hover {
+      background: var(--rc-sidebar-item-hover);
+      color: #ffffff;
+    }
+
+    .sidebar-item.active {
+      background: var(--rc-sidebar-item-active);
+      color: var(--rc-sidebar-item-active-text);
+      font-weight: 600;
+    }
+
+    .sidebar-item svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Main Settings Page Container */
+    .rc-main-view {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--rc-bg);
+      overflow: hidden;
       position: relative;
     }
-    .theme-radio-card:hover {
-      background: var(--rc-surface-hover);
-      border-color: var(--rc-primary);
+
+    .settings-page-header {
+      background: var(--rc-surface);
+      border-bottom: 1px solid var(--rc-border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
     }
-    .theme-radio-card.selected {
-      border-color: var(--rc-primary);
-      background: rgba(21, 111, 247, 0.05);
-      box-shadow: 0 0 0 1px var(--rc-primary);
-    }
-    .theme-radio-card input[type="radio"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--rc-primary);
+
+    .btn-back {
+      border: none;
+      background: transparent;
       cursor: pointer;
+      color: var(--rc-text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 4px;
     }
-    .theme-label-group {
-      flex: 1;
-    }
-    .theme-name {
-      font-size: 13px;
-      font-weight: 600;
+
+    .btn-back:hover {
+      background: var(--rc-surface-hover);
       color: var(--rc-text-primary);
     }
-    .theme-desc {
+
+    .btn-back svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .page-title-box h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--rc-text-primary);
+    }
+
+    .page-title-box .breadcrumb {
       font-size: 11px;
       color: var(--rc-text-secondary);
       margin-top: 2px;
     }
-    .preview-chip {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 1px solid rgba(0, 0, 0, 0.15);
+
+    .settings-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
     }
 
-    /* Form Action Buttons (Save & Cancel) */
-    .settings-footer {
-      padding: 16px 24px;
-      border-top: 1px solid var(--rc-border);
-      background: var(--rc-surface);
+    .settings-form-wrapper {
+      width: 100%;
+      max-width: 680px;
       display: flex;
-      justify-content: flex-end;
+      flex-direction: column;
+      gap: 32px;
+      padding-bottom: 80px;
+    }
+
+    .settings-card {
+      background: var(--rc-surface);
+      border: var(--rc-card-border);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--rc-text-primary);
+      margin-bottom: 6px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--rc-text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    /* Radio Options List */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
-    .btn {
-      padding: 10px 18px;
+
+    .rc-radio-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
       border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
+      border: 1px solid var(--rc-border);
       cursor: pointer;
       transition: all 0.15s ease;
+      background: var(--rc-surface);
+    }
+
+    .rc-radio-row:hover {
+      background: var(--rc-surface-hover);
+      border-color: var(--rc-primary);
+    }
+
+    .rc-radio-row.selected {
+      border-color: var(--rc-primary);
+      background: rgba(21, 111, 247, 0.04);
+    }
+
+    .rc-radio-row input[type="radio"] {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--rc-primary);
+      cursor: pointer;
+    }
+
+    .radio-label-content {
+      flex: 1;
+    }
+
+    .radio-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--rc-text-primary);
+    }
+
+    .radio-description {
+      font-size: 12px;
+      color: var(--rc-text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Additional Mock Settings (Font Size / Mentions) for Real Look */
+    .select-dropdown {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--rc-border);
+      background: var(--rc-surface);
+      color: var(--rc-text-primary);
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Fixed Bottom Action Bar */
+    .fixed-footer-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--rc-surface);
+      border-top: 1px solid var(--rc-border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      transition: all 0.15s ease;
     }
-    .btn-cancel {
+
+    .btn-secondary {
       background: transparent;
       border: 1px solid var(--rc-border);
       color: var(--rc-text-primary);
     }
-    .btn-cancel:hover:not(:disabled) {
+
+    .btn-secondary:hover:not(:disabled) {
       background: var(--rc-surface-hover);
     }
+
     .btn-primary {
       background: var(--rc-primary);
-      border: none;
+      border: 1px solid var(--rc-primary);
       color: #ffffff;
     }
+
     .btn-primary:hover:not(:disabled) {
       background: var(--rc-primary-hover);
     }
+
     .btn:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
     }
 
     /* Toast Notification */
-    .toastbar {
+    .fuselage-toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 74px;
+      right: 32px;
       background: #1f2329;
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
+      color: #ffffff;
+      padding: 12px 18px;
+      border-radius: 6px;
       font-size: 13px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
       display: flex;
       align-items: center;
       gap: 10px;
-      transform: translateY(100px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(60px);
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 1000;
-      border-left: 4px solid #2de0a5;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 200;
+      border-left: 4px solid var(--rc-success);
     }
-    .toastbar.show {
+
+    .fuselage-toast.active {
       transform: translateY(0);
       opacity: 1;
+      pointer-events: auto;
     }
-
-    /* Tab switcher for Code Inspector */
-    .nav-tabs {
-      display: flex;
-      gap: 8px;
-      background: var(--rc-surface);
-      padding: 8px 24px 0;
-      border-bottom: 1px solid var(--rc-border);
-    }
-    .tab-btn {
-      padding: 8px 16px;
-      background: transparent;
-      border: none;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--rc-text-secondary);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-    }
-    .tab-btn.active {
-      color: var(--rc-primary);
-      border-bottom-color: var(--rc-primary);
-      font-weight: 600;
-    }
-
-    .code-inspector {
-      display: none;
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-      background: #0d1117;
-      color: #c9d1d9;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-    .code-inspector pre { margin: 0; }
-    .code-inspector.active { display: block; }
   </style>
 </head>
 <body>
 
-  <!-- Submission Info Top Bar -->
-  <div class="eval-banner">
-    <div>
-      <strong>Rocket.Chat Live Theme Preview Showcase</strong> | Issue #39826 | PR #43825 | Student: <strong>Tisya Gupta</strong> (Team G374)
+  <!-- Top Navigation Bar -->
+  <header class="rc-topbar">
+    <div class="topbar-left">
+      <div class="rc-logo-badge">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1.03 21.5a.75.75 0 0 0 .97.97l5.21-1.94A9.95 9.95 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.42 0-2.77-.32-3.98-.89a.75.75 0 0 0-.58-.04l-3.64 1.36 1.36-3.64a.75.75 0 0 0-.04-.58A7.95 7.95 0 0 1 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z"/>
+        </svg>
+        <span class="rc-logo-text">Rocket.Chat</span>
+      </div>
     </div>
-    <div class="eval-badges">
-      <span class="badge badge-green">✓ 100% Unit Tests Passing (229/229)</span>
-      <span class="badge">E2E Playwright Passing</span>
-      <a href="https://github.com/Tisya-Gupta/Rocket.Chat/pull/43825" target="_blank" class="badge">View PR #43825 ↗</a>
-      <a href="https://github.com/RocketChat/Rocket.Chat/issues/39826" target="_blank" class="badge">Issue #39826 ↗</a>
-    </div>
-  </div>
 
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo">R</div>
-        <div class="workspace-info">
-          <h3>Rocket.Chat Workspace</h3>
-          <p>develop branch (9.1.0)</p>
+    <div class="topbar-search">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <span>Search (Ctrl+K)</span>
+    </div>
+
+    <div class="topbar-right">
+      <button class="icon-btn" title="Directory">
+        <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+      </button>
+      <button class="icon-btn" title="Notifications">
+        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      </button>
+      <div class="user-avatar-btn" title="Tisya Gupta (Online)">
+        TG
+        <div class="avatar-status-badge"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout: Sidebar + Main Content -->
+  <div class="rc-layout">
+    <!-- Left Navigation Sidebar -->
+    <aside class="rc-sidebar">
+      <div class="sidebar-header-section">
+        <div>
+          <div class="workspace-title">Tisya Workspace</div>
+          <div class="workspace-sub">Rocket.Chat v9.1.0-develop</div>
         </div>
       </div>
-      <div class="sidebar-channels">
-        <div class="sidebar-section-title">Channels</div>
-        <div class="channel-item active"># general</div>
-        <div class="channel-item"># announcements</div>
-        <div class="channel-item"># design-system</div>
-        <div class="sidebar-section-title" style="margin-top: 12px;">Direct Messages</div>
-        <div class="channel-item">● Mentor Review</div>
-        <div class="channel-item">● Tisya Gupta (You)</div>
-      </div>
-      <div class="user-profile-bar">
-        <div class="avatar">
-          TG
-          <div class="status-dot"></div>
+
+      <nav class="sidebar-menu-list">
+        <div class="menu-group-header">Account</div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span>Profile</span>
         </div>
-        <div class="user-info">
-          <div class="name">Tisya Gupta</div>
-          <div class="role">Software Engineer Associate</div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          <span>Preferences</span>
         </div>
-      </div>
+        <div class="sidebar-item active">
+          <svg viewBox="0 0 24 24"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
+          <span>Accessibility &amp; Appearance</span>
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <span>Security</span>
+        </div>
+
+        <div class="menu-group-header" style="margin-top: 16px;">Channels</div>
+        <div class="sidebar-item">
+          <span># general</span>
+        </div>
+        <div class="sidebar-item">
+          <span># announcements</span>
+        </div>
+      </nav>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="workspace-area">
-      <!-- Header -->
-      <div class="workspace-header">
-        <h2>
-          <span>⚙️</span>
-          <span>Account Settings &gt; Accessibility &amp; Appearance</span>
-        </h2>
-        <div class="header-actions">
-          <button class="btn btn-cancel" id="reset-defaults-btn" style="font-size: 11px; padding: 6px 12px;">Reset All</button>
+    <!-- Main Settings View -->
+    <main class="rc-main-view">
+      <div class="settings-page-header">
+        <button class="btn-back" title="Back">
+          <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <div class="page-title-box">
+          <h1>Accessibility &amp; appearance</h1>
+          <div class="breadcrumb">Account &gt; Accessibility &amp; appearance</div>
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <div class="nav-tabs">
-        <button class="tab-btn active" id="tab-interactive">Interactive Live Preview</button>
-        <button class="tab-btn" id="tab-code">Code &amp; Architecture Inspector</button>
-      </div>
+      <!-- Settings Content Scroll Area -->
+      <div class="settings-scroll-area">
+        <div class="settings-form-wrapper">
+          
+          <!-- Card 1: Theme (The Core Feature) -->
+          <section class="settings-card">
+            <h2 class="card-title">Theme</h2>
+            <p class="card-desc">
+              Choose your preferred visual appearance. Selecting a theme will update the workspace colors in real-time.
+            </p>
 
-      <!-- Layout View 1: Interactive Live Preview -->
-      <div class="workspace-content" id="view-interactive">
-        <!-- Live Chat Channel -->
-        <div class="chat-view">
-          <div class="chat-messages">
-            <div class="message-bubble">
-              <div class="avatar" style="background: #e0245e;">RC</div>
-              <div class="msg-content">
-                <div class="msg-header">
-                  <span class="msg-author">Rocket.Chat Bot</span>
-                  <span class="msg-time">Today at 10:00 AM</span>
+            <div class="radio-group" role="radiogroup" aria-label="Theme selection">
+              <!-- Light -->
+              <label class="rc-radio-row selected" data-value="light" id="row-light">
+                <input type="radio" name="theme-radio" id="radio-light" value="light" checked>
+                <div class="radio-label-content">
+                  <div class="radio-title">Light</div>
+                  <div class="radio-description">Classic bright appearance recommended for well-lit rooms.</div>
                 </div>
-                <div class="msg-body">
-                  Welcome to Rocket.Chat! Test the <strong>Live Theme Preview</strong> feature by toggling the theme radio options on the right.
+              </label>
+
+              <!-- Dark -->
+              <label class="rc-radio-row" data-value="dark" id="row-dark">
+                <input type="radio" name="theme-radio" id="radio-dark" value="dark">
+                <div class="radio-label-content">
+                  <div class="radio-title">Dark</div>
+                  <div class="radio-description">Low-light appearance designed to reduce eye strain.</div>
                 </div>
-              </div>
+              </label>
+
+              <!-- High Contrast -->
+              <label class="rc-radio-row" data-value="high-contrast" id="row-high-contrast">
+                <input type="radio" name="theme-radio" id="radio-high-contrast" value="high-contrast">
+                <div class="radio-label-content">
+                  <div class="radio-title">High contrast</div>
+                  <div class="radio-description">High-contrast accessibility colors with high visual definition.</div>
+                </div>
+              </label>
+
+              <!-- Match System -->
+              <label class="rc-radio-row" data-value="auto" id="row-auto">
+                <input type="radio" name="theme-radio" id="radio-auto" value="auto">
+                <div class="radio-label-content">
+                  <div class="radio-title">Match system</div>
+                  <div class="radio-description">Automatically sync with your operating system's light or dark mode.</div>
+                </div>
+              </label>
             </div>
+          </section>
 
-            <div class="message-bubble">
-              <div class="avatar" style="background: #156ff7;">TG</div>
-              <div class="msg-content">
-                <div class="msg-header">
-                  <span class="msg-author">Tisya Gupta</span>
-                  <span class="msg-time">Today at 10:02 AM</span>
-                </div>
-                <div class="msg-body">
-                  Clicking <strong>Dark</strong>, <strong>High Contrast</strong>, or <strong>Light</strong> repaints this whole page instantly in memory via <code>useSyncExternalStore</code> without saving to the database!
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="chat-input-bar">
-            <input type="text" class="chat-input-box" placeholder="Message #general" disabled value="Interactive theme preview active...">
-          </div>
-        </div>
+          <!-- Card 2: Font Size -->
+          <section class="settings-card">
+            <h2 class="card-title">Font size</h2>
+            <p class="card-desc">Customize text size across the application for improved readability.</p>
+            <select class="select-dropdown">
+              <option value="100" selected>Default (100%)</option>
+              <option value="110">Medium (110%)</option>
+              <option value="125">Large (125%)</option>
+            </select>
+          </section>
 
-        <!-- Accessibility View Settings Form -->
-        <div class="settings-panel">
-          <div class="settings-header">
-            <h3>Theme Appearance</h3>
-            <p>Select your preferred workspace theme. Preview applies immediately in real time.</p>
-          </div>
-
-          <div class="settings-body">
-            <div>
-              <div class="form-group-title">
-                <span>Theme Mode</span>
-                <span class="live-status-pill" id="live-indicator">Saved: Light</span>
-              </div>
-
-              <div class="theme-options">
-                <!-- Light -->
-                <label class="theme-radio-card" data-val="light" id="card-light">
-                  <input type="radio" name="theme-radio" value="light" checked>
-                  <div class="preview-chip" style="background: #ffffff;"></div>
-                  <div class="theme-label-group">
-                    <div class="theme-name">Light</div>
-                    <div class="theme-desc">Clean, crisp light appearance for daytime use.</div>
-                  </div>
-                </label>
-
-                <!-- Dark -->
-                <label class="theme-radio-card" data-val="dark" id="card-dark">
-                  <input type="radio" name="theme-radio" value="dark">
-                  <div class="preview-chip" style="background: #1a1d22;"></div>
-                  <div class="theme-label-group">
-                    <div class="theme-name">Dark</div>
-                    <div class="theme-desc">Reduced glare for comfortable nighttime viewing.</div>
-                  </div>
-                </label>
-
-                <!-- High Contrast -->
-                <label class="theme-radio-card" data-val="high-contrast" id="card-high-contrast">
-                  <input type="radio" name="theme-radio" value="high-contrast">
-                  <div class="preview-chip" style="background: #000000; border: 2px solid #ffff00;"></div>
-                  <div class="theme-label-group">
-                    <div class="theme-name">High Contrast</div>
-                    <div class="theme-desc">Maximum readability and contrast for accessibility.</div>
-                  </div>
-                </label>
-
-                <!-- Match System -->
-                <label class="theme-radio-card" data-val="auto" id="card-auto">
-                  <input type="radio" name="theme-radio" value="auto">
-                  <div class="preview-chip" style="background: linear-gradient(135deg, #fff 50%, #1a1d22 50%);"></div>
-                  <div class="theme-label-group">
-                    <div class="theme-name">Match System</div>
-                    <div class="theme-desc">Follow your computer operating system settings.</div>
-                  </div>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Save / Cancel Action Bar -->
-          <div class="settings-footer">
-            <button class="btn btn-cancel" id="btn-cancel" disabled>Cancel</button>
-            <button class="btn btn-primary" id="btn-save" disabled>Save Changes</button>
-          </div>
         </div>
       </div>
 
-      <!-- Layout View 2: Code & Architecture Inspector -->
-      <div class="code-inspector" id="view-code">
-        <h3 style="color: #58a6ff; margin-bottom: 16px;">// 1. The Store: packages/ui-client/src/hooks/useThemePreview.ts</h3>
-<pre><code>import type { ThemePreference as ThemeMode } from '@rocket.chat/core-typings';
-import { useSyncExternalStore } from 'react';
-
-const listeners = new Set&lt;() =&gt; void&gt;();
-let preview: ThemeMode | undefined;
-
-export const setThemePreview = (mode: ThemeMode | undefined): void =&gt; {
-    if (preview === mode) return;
-    preview = mode;
-    listeners.forEach((listener) =&gt; listener());
-};
-
-const subscribe = (listener: () =&gt; void): (() =&gt; void) =&gt; {
-    listeners.add(listener);
-    return () =&gt; { listeners.delete(listener); };
-};
-
-const getSnapshot = (): ThemeMode | undefined =&gt; preview;
-
-export const useThemePreview = (): ThemeMode | undefined =&gt;
-    useSyncExternalStore(subscribe, getSnapshot);
-</code></pre>
-
-        <h3 style="color: #58a6ff; margin: 24px 0 16px;">// 2. The Resolver: packages/ui-client/src/hooks/useThemeMode.ts</h3>
-<pre><code>export const useThemeMode = () =&gt; {
-    const previewMode = useThemePreview();
-    const savedMode = useUserPreference&lt;ThemeMode&gt;('themeAppearence') || 'auto';
-    const themeMode = previewMode ?? savedMode; // ⭐ Preview takes priority!
-    const isDarkMode = useDarkMode(themeMode === 'auto' ? undefined : themeMode === 'dark');
-
-    if (isDarkMode) return 'dark';
-    if (themeMode === 'high-contrast') return 'high-contrast';
-    return 'light';
-};
-</code></pre>
-
-        <h3 style="color: #58a6ff; margin: 24px 0 16px;">// 3. Settings View: packages/ui-account/src/accessibility/views/AccessibilityView.tsx</h3>
-<pre><code>const currentData = watch();
-const isThemeDirty = !!dirtyFields.themeAppearence;
-
-// Live preview effect with dirty gate
-useEffect(() =&gt; {
-    setThemePreview(isThemeDirty ? currentData.themeAppearence : undefined);
-}, [currentData.themeAppearence, isThemeDirty]);
-
-// Clean up preview if user unmounts/navigates away
-useEffect(() =&gt; () =&gt; setThemePreview(undefined), []);
-</code></pre>
-      </div>
+      <!-- Action Footer Bar -->
+      <footer class="fixed-footer-bar">
+        <button class="btn btn-secondary" id="btn-cancel" disabled>Cancel</button>
+        <button class="btn btn-primary" id="btn-save" disabled>Save changes</button>
+      </footer>
     </main>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toastbar" id="toastbar">
-    <span>✓</span>
-    <span id="toast-msg">Theme preferences saved successfully!</span>
+  <!-- Real Fuselage Toast -->
+  <div class="fuselage-toast" id="fuselage-toast" role="alert">
+    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: #2de0a5;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    <span id="toast-text">Preferences saved</span>
   </div>
 
   <script>
-    // State simulating Rocket.Chat store logic
+    // Exact store state machine replicating useThemePreview + useThemeMode
     let savedTheme = 'light';
     let previewTheme = undefined;
     let isDirty = false;
 
-    // DOM Elements
     const root = document.documentElement;
+    const radioRows = document.querySelectorAll('.rc-radio-row');
     const radioInputs = document.querySelectorAll('input[name="theme-radio"]');
-    const radioCards = document.querySelectorAll('.theme-radio-card');
     const btnCancel = document.getElementById('btn-cancel');
     const btnSave = document.getElementById('btn-save');
-    const liveIndicator = document.getElementById('live-indicator');
-    const toastbar = document.getElementById('toastbar');
-    const toastMsg = document.getElementById('toast-msg');
+    const toast = document.getElementById('fuselage-toast');
+    const toastText = document.getElementById('toast-text');
 
-    // Tab switcher
-    const tabInteractive = document.getElementById('tab-interactive');
-    const tabCode = document.getElementById('tab-code');
-    const viewInteractive = document.getElementById('view-interactive');
-    const viewCode = document.getElementById('view-code');
-
-    tabInteractive.addEventListener('click', () => {
-      tabInteractive.classList.add('active');
-      tabCode.classList.remove('active');
-      viewInteractive.style.display = 'grid';
-      viewCode.classList.remove('active');
-    });
-
-    tabCode.addEventListener('click', () => {
-      tabCode.classList.add('active');
-      tabInteractive.classList.remove('active');
-      viewInteractive.style.display = 'none';
-      viewCode.classList.add('active');
-    });
-
-    // Theme resolver simulating useThemeMode()
-    function applyActiveTheme() {
+    function applyResolvedTheme() {
+      // Logic matching: const themeMode = previewMode ?? savedMode;
       const active = previewTheme !== undefined ? previewTheme : savedTheme;
       let resolved = active;
       if (active === 'auto') {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         resolved = prefersDark ? 'dark' : 'light';
       }
-      
+
       root.setAttribute('data-theme', resolved);
 
-      // Update UI cards
-      radioCards.forEach(card => {
-        const val = card.getAttribute('data-val');
-        if (val === (previewTheme || savedTheme)) {
-          card.classList.add('selected');
-          card.querySelector('input').checked = true;
+      // Update active radio rows
+      const targetVal = previewTheme !== undefined ? previewTheme : savedTheme;
+      radioRows.forEach(row => {
+        const val = row.getAttribute('data-value');
+        const input = row.querySelector('input');
+        if (val === targetVal) {
+          row.classList.add('selected');
+          input.checked = true;
         } else {
-          card.classList.remove('selected');
+          row.classList.remove('selected');
+          input.checked = false;
         }
       });
 
-      // Update Live Indicator
-      if (previewTheme !== undefined) {
-        liveIndicator.textContent = `Preview: ${previewTheme.toUpperCase()}`;
-        liveIndicator.style.background = 'rgba(236, 13, 56, 0.15)';
-        liveIndicator.style.color = '#ec0d38';
-      } else {
-        liveIndicator.textContent = `Saved: ${savedTheme.toUpperCase()}`;
-        liveIndicator.style.background = 'rgba(45, 224, 165, 0.15)';
-        liveIndicator.style.color = '#2de0a5';
-      }
-
-      // Update button states
+      // Update Save & Cancel states based on isDirty
       btnCancel.disabled = !isDirty;
       btnSave.disabled = !isDirty;
     }
 
-    // Radio change simulation
+    // Radio change handlers
     radioInputs.forEach(input => {
       input.addEventListener('change', (e) => {
         const selected = e.target.value;
         isDirty = selected !== savedTheme;
         previewTheme = isDirty ? selected : undefined;
-        applyActiveTheme();
+        applyResolvedTheme();
       });
     });
 
-    // Cancel Button
+    // Cancel: Clears preview & restores saved theme
     btnCancel.addEventListener('click', () => {
       previewTheme = undefined;
       isDirty = false;
-      applyActiveTheme();
-      showToast('Theme preview cleared. Restored saved theme.');
+      applyResolvedTheme();
+      showToast('Theme preview cancelled. Restored saved theme.');
     });
 
-    // Save Changes Button
+    // Save Changes: Persists preview as permanent theme
     btnSave.addEventListener('click', () => {
       if (previewTheme !== undefined) {
         savedTheme = previewTheme;
       }
       previewTheme = undefined;
       isDirty = false;
-      applyActiveTheme();
-      showToast(`Saved preference: ${savedTheme.toUpperCase()} theme permanently persisted!`);
-    });
-
-    // Reset Defaults
-    document.getElementById('reset-defaults-btn').addEventListener('click', () => {
-      savedTheme = 'light';
-      previewTheme = undefined;
-      isDirty = false;
-      applyActiveTheme();
-      showToast('Reset to default Light theme.');
+      applyResolvedTheme();
+      showToast('Preferences saved');
     });
 
     function showToast(msg) {
-      toastMsg.textContent = msg;
-      toastbar.classList.add('show');
+      toastText.textContent = msg;
+      toast.classList.add('active');
       setTimeout(() => {
-        toastbar.classList.remove('show');
-      }, 3500);
+        toast.classList.remove('active');
+      }, 3000);
     }
 
-    // Initialize
-    applyActiveTheme();
+    // Initial render
+    applyResolvedTheme();
   </script>
 </body>
 </html>
