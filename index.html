@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rocket.Chat - Live Theme Preview | Tisya Gupta</title>
+  <link rel="icon" href="https://rocket.chat/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Default Light Palette */
+      --rc-bg: #f7f8fa;
+      --rc-surface: #ffffff;
+      --rc-surface-hover: #f2f3f5;
+      --rc-sidebar-bg: #1f2329;
+      --rc-sidebar-text: #9ea2a8;
+      --rc-sidebar-active: #2f343d;
+      --rc-sidebar-active-text: #ffffff;
+      --rc-text-primary: #1f2329;
+      --rc-text-secondary: #6c727a;
+      --rc-border: #e4e7ea;
+      --rc-primary: #156ff7;
+      --rc-primary-hover: #0c57d8;
+      --rc-danger: #ec0d38;
+      --rc-success: #2de0a5;
+      --rc-badge-bg: #f2f3f5;
+      --rc-badge-text: #2f343d;
+      --rc-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --rc-card-border: 1px solid #e4e7ea;
+    }
+
+    [data-theme="dark"] {
+      --rc-bg: #111317;
+      --rc-surface: #1a1d22;
+      --rc-surface-hover: #262a30;
+      --rc-sidebar-bg: #15181c;
+      --rc-sidebar-text: #9ea2a8;
+      --rc-sidebar-active: #272c34;
+      --rc-sidebar-active-text: #ffffff;
+      --rc-text-primary: #f2f3f5;
+      --rc-text-secondary: #9ea2a8;
+      --rc-border: #2f343d;
+      --rc-primary: #3884f8;
+      --rc-primary-hover: #5093f9;
+      --rc-danger: #f5455c;
+      --rc-success: #2de0a5;
+      --rc-badge-bg: #272c34;
+      --rc-badge-text: #d7dbe0;
+      --rc-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+      --rc-card-border: 1px solid #2f343d;
+    }
+
+    [data-theme="high-contrast"] {
+      --rc-bg: #000000;
+      --rc-surface: #0a0a0a;
+      --rc-surface-hover: #1f1f1f;
+      --rc-sidebar-bg: #000000;
+      --rc-sidebar-text: #ffff00;
+      --rc-sidebar-active: #2b2b00;
+      --rc-sidebar-active-text: #ffffff;
+      --rc-text-primary: #ffffff;
+      --rc-text-secondary: #ffff00;
+      --rc-border: #ffff00;
+      --rc-primary: #00ffff;
+      --rc-primary-hover: #66ffff;
+      --rc-danger: #ff0055;
+      --rc-success: #00ff66;
+      --rc-badge-bg: #222222;
+      --rc-badge-text: #ffffff;
+      --rc-shadow: 0 0 0 2px #ffff00;
+      --rc-card-border: 2px solid #ffff00;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--rc-bg);
+      color: var(--rc-text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    /* Top Banner / Submission Info Bar */
+    .eval-banner {
+      background: #1f2329;
+      color: #ffffff;
+      padding: 10px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #2f343d;
+    }
+    .eval-banner strong { color: #2de0a5; }
+    .eval-badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .badge {
+      background: #2f343d;
+      color: #e4e7ea;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+    .badge:hover { background: #3a404a; }
+    .badge-green { background: rgba(45, 224, 165, 0.2); color: #2de0a5; border: 1px solid rgba(45, 224, 165, 0.4); }
+
+    /* Main App Layout */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 45px);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--rc-sidebar-bg);
+      color: var(--rc-sidebar-text);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--rc-border);
+      flex-shrink: 0;
+    }
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      background: #f5455c;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .workspace-info h3 { font-size: 14px; color: #fff; font-weight: 600; }
+    .workspace-info p { font-size: 11px; color: #9ea2a8; }
+
+    .sidebar-channels {
+      padding: 12px 8px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px;
+      color: #6c727a;
+      font-weight: 600;
+    }
+    .channel-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--rc-sidebar-text);
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: background 0.15s;
+    }
+    .channel-item:hover { background: rgba(255, 255, 255, 0.05); }
+    .channel-item.active {
+      background: var(--rc-sidebar-active);
+      color: var(--rc-sidebar-active-text);
+      font-weight: 500;
+    }
+
+    .user-profile-bar {
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #156ff7;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      position: relative;
+    }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      background: #2de0a5;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      border: 2px solid var(--rc-sidebar-bg);
+    }
+    .user-info { flex: 1; }
+    .user-info .name { font-size: 13px; color: #fff; font-weight: 600; }
+    .user-info .role { font-size: 11px; color: #9ea2a8; }
+
+    /* Main Workspace Area */
+    .workspace-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--rc-bg);
+    }
+
+    /* Workspace Header */
+    .workspace-header {
+      padding: 12px 24px;
+      background: var(--rc-surface);
+      border-bottom: 1px solid var(--rc-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .workspace-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-actions { display: flex; gap: 8px; }
+
+    /* Content Layout (Chat vs Settings vs Code Inspector) */
+    .workspace-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      overflow: hidden;
+    }
+
+    /* Chat Channel Simulation */
+    .chat-view {
+      display: flex;
+      flex-direction: column;
+      background: var(--rc-bg);
+      border-right: 1px solid var(--rc-border);
+      overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .message-bubble {
+      display: flex;
+      gap: 12px;
+      max-width: 85%;
+    }
+    .msg-content {
+      background: var(--rc-surface);
+      border: var(--rc-card-border);
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .msg-author { font-size: 13px; font-weight: 600; color: var(--rc-text-primary); }
+    .msg-time { font-size: 11px; color: var(--rc-text-secondary); }
+    .msg-body { font-size: 13px; line-height: 1.5; color: var(--rc-text-primary); }
+
+    .chat-input-bar {
+      padding: 16px 24px;
+      background: var(--rc-surface);
+      border-top: 1px solid var(--rc-border);
+    }
+    .chat-input-box {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--rc-border);
+      background: var(--rc-bg);
+      color: var(--rc-text-primary);
+      font-size: 13px;
+      outline: none;
+    }
+
+    /* Accessibility & Appearance Settings Panel */
+    .settings-panel {
+      background: var(--rc-surface);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-shadow: var(--rc-shadow);
+      z-index: 10;
+    }
+    .settings-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--rc-border);
+    }
+    .settings-header h3 { font-size: 18px; font-weight: 700; color: var(--rc-text-primary); }
+    .settings-header p { font-size: 13px; color: var(--rc-text-secondary); margin-top: 4px; }
+
+    .settings-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .form-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--rc-text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .live-status-pill {
+      font-size: 11px;
+      background: rgba(21, 111, 247, 0.15);
+      color: var(--rc-primary);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    /* Radio Theme Cards */
+    .theme-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .theme-radio-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--rc-border);
+      border-radius: 8px;
+      cursor: pointer;
+      background: var(--rc-surface);
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .theme-radio-card:hover {
+      background: var(--rc-surface-hover);
+      border-color: var(--rc-primary);
+    }
+    .theme-radio-card.selected {
+      border-color: var(--rc-primary);
+      background: rgba(21, 111, 247, 0.05);
+      box-shadow: 0 0 0 1px var(--rc-primary);
+    }
+    .theme-radio-card input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--rc-primary);
+      cursor: pointer;
+    }
+    .theme-label-group {
+      flex: 1;
+    }
+    .theme-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--rc-text-primary);
+    }
+    .theme-desc {
+      font-size: 11px;
+      color: var(--rc-text-secondary);
+      margin-top: 2px;
+    }
+    .preview-chip {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    /* Form Action Buttons (Save & Cancel) */
+    .settings-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--rc-border);
+      background: var(--rc-surface);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--rc-border);
+      color: var(--rc-text-primary);
+    }
+    .btn-cancel:hover:not(:disabled) {
+      background: var(--rc-surface-hover);
+    }
+    .btn-primary {
+      background: var(--rc-primary);
+      border: none;
+      color: #ffffff;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--rc-primary-hover);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Toast Notification */
+    .toastbar {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1f2329;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+      border-left: 4px solid #2de0a5;
+    }
+    .toastbar.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Tab switcher for Code Inspector */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: var(--rc-surface);
+      padding: 8px 24px 0;
+      border-bottom: 1px solid var(--rc-border);
+    }
+    .tab-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--rc-text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tab-btn.active {
+      color: var(--rc-primary);
+      border-bottom-color: var(--rc-primary);
+      font-weight: 600;
+    }
+
+    .code-inspector {
+      display: none;
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background: #0d1117;
+      color: #c9d1d9;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .code-inspector pre { margin: 0; }
+    .code-inspector.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- Submission Info Top Bar -->
+  <div class="eval-banner">
+    <div>
+      <strong>Rocket.Chat Live Theme Preview Showcase</strong> | Issue #39826 | PR #43825 | Student: <strong>Tisya Gupta</strong> (Team G374)
+    </div>
+    <div class="eval-badges">
+      <span class="badge badge-green">✓ 100% Unit Tests Passing (229/229)</span>
+      <span class="badge">E2E Playwright Passing</span>
+      <a href="https://github.com/Tisya-Gupta/Rocket.Chat/pull/43825" target="_blank" class="badge">View PR #43825 ↗</a>
+      <a href="https://github.com/RocketChat/Rocket.Chat/issues/39826" target="_blank" class="badge">Issue #39826 ↗</a>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">R</div>
+        <div class="workspace-info">
+          <h3>Rocket.Chat Workspace</h3>
+          <p>develop branch (9.1.0)</p>
+        </div>
+      </div>
+      <div class="sidebar-channels">
+        <div class="sidebar-section-title">Channels</div>
+        <div class="channel-item active"># general</div>
+        <div class="channel-item"># announcements</div>
+        <div class="channel-item"># design-system</div>
+        <div class="sidebar-section-title" style="margin-top: 12px;">Direct Messages</div>
+        <div class="channel-item">● Mentor Review</div>
+        <div class="channel-item">● Tisya Gupta (You)</div>
+      </div>
+      <div class="user-profile-bar">
+        <div class="avatar">
+          TG
+          <div class="status-dot"></div>
+        </div>
+        <div class="user-info">
+          <div class="name">Tisya Gupta</div>
+          <div class="role">Software Engineer Associate</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="workspace-area">
+      <!-- Header -->
+      <div class="workspace-header">
+        <h2>
+          <span>⚙️</span>
+          <span>Account Settings &gt; Accessibility &amp; Appearance</span>
+        </h2>
+        <div class="header-actions">
+          <button class="btn btn-cancel" id="reset-defaults-btn" style="font-size: 11px; padding: 6px 12px;">Reset All</button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="tab-btn active" id="tab-interactive">Interactive Live Preview</button>
+        <button class="tab-btn" id="tab-code">Code &amp; Architecture Inspector</button>
+      </div>
+
+      <!-- Layout View 1: Interactive Live Preview -->
+      <div class="workspace-content" id="view-interactive">
+        <!-- Live Chat Channel -->
+        <div class="chat-view">
+          <div class="chat-messages">
+            <div class="message-bubble">
+              <div class="avatar" style="background: #e0245e;">RC</div>
+              <div class="msg-content">
+                <div class="msg-header">
+                  <span class="msg-author">Rocket.Chat Bot</span>
+                  <span class="msg-time">Today at 10:00 AM</span>
+                </div>
+                <div class="msg-body">
+                  Welcome to Rocket.Chat! Test the <strong>Live Theme Preview</strong> feature by toggling the theme radio options on the right.
+                </div>
+              </div>
+            </div>
+
+            <div class="message-bubble">
+              <div class="avatar" style="background: #156ff7;">TG</div>
+              <div class="msg-content">
+                <div class="msg-header">
+                  <span class="msg-author">Tisya Gupta</span>
+                  <span class="msg-time">Today at 10:02 AM</span>
+                </div>
+                <div class="msg-body">
+                  Clicking <strong>Dark</strong>, <strong>High Contrast</strong>, or <strong>Light</strong> repaints this whole page instantly in memory via <code>useSyncExternalStore</code> without saving to the database!
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" class="chat-input-box" placeholder="Message #general" disabled value="Interactive theme preview active...">
+          </div>
+        </div>
+
+        <!-- Accessibility View Settings Form -->
+        <div class="settings-panel">
+          <div class="settings-header">
+            <h3>Theme Appearance</h3>
+            <p>Select your preferred workspace theme. Preview applies immediately in real time.</p>
+          </div>
+
+          <div class="settings-body">
+            <div>
+              <div class="form-group-title">
+                <span>Theme Mode</span>
+                <span class="live-status-pill" id="live-indicator">Saved: Light</span>
+              </div>
+
+              <div class="theme-options">
+                <!-- Light -->
+                <label class="theme-radio-card" data-val="light" id="card-light">
+                  <input type="radio" name="theme-radio" value="light" checked>
+                  <div class="preview-chip" style="background: #ffffff;"></div>
+                  <div class="theme-label-group">
+                    <div class="theme-name">Light</div>
+                    <div class="theme-desc">Clean, crisp light appearance for daytime use.</div>
+                  </div>
+                </label>
+
+                <!-- Dark -->
+                <label class="theme-radio-card" data-val="dark" id="card-dark">
+                  <input type="radio" name="theme-radio" value="dark">
+                  <div class="preview-chip" style="background: #1a1d22;"></div>
+                  <div class="theme-label-group">
+                    <div class="theme-name">Dark</div>
+                    <div class="theme-desc">Reduced glare for comfortable nighttime viewing.</div>
+                  </div>
+                </label>
+
+                <!-- High Contrast -->
+                <label class="theme-radio-card" data-val="high-contrast" id="card-high-contrast">
+                  <input type="radio" name="theme-radio" value="high-contrast">
+                  <div class="preview-chip" style="background: #000000; border: 2px solid #ffff00;"></div>
+                  <div class="theme-label-group">
+                    <div class="theme-name">High Contrast</div>
+                    <div class="theme-desc">Maximum readability and contrast for accessibility.</div>
+                  </div>
+                </label>
+
+                <!-- Match System -->
+                <label class="theme-radio-card" data-val="auto" id="card-auto">
+                  <input type="radio" name="theme-radio" value="auto">
+                  <div class="preview-chip" style="background: linear-gradient(135deg, #fff 50%, #1a1d22 50%);"></div>
+                  <div class="theme-label-group">
+                    <div class="theme-name">Match System</div>
+                    <div class="theme-desc">Follow your computer operating system settings.</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save / Cancel Action Bar -->
+          <div class="settings-footer">
+            <button class="btn btn-cancel" id="btn-cancel" disabled>Cancel</button>
+            <button class="btn btn-primary" id="btn-save" disabled>Save Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layout View 2: Code & Architecture Inspector -->
+      <div class="code-inspector" id="view-code">
+        <h3 style="color: #58a6ff; margin-bottom: 16px;">// 1. The Store: packages/ui-client/src/hooks/useThemePreview.ts</h3>
+<pre><code>import type { ThemePreference as ThemeMode } from '@rocket.chat/core-typings';
+import { useSyncExternalStore } from 'react';
+
+const listeners = new Set&lt;() =&gt; void&gt;();
+let preview: ThemeMode | undefined;
+
+export const setThemePreview = (mode: ThemeMode | undefined): void =&gt; {
+    if (preview === mode) return;
+    preview = mode;
+    listeners.forEach((listener) =&gt; listener());
+};
+
+const subscribe = (listener: () =&gt; void): (() =&gt; void) =&gt; {
+    listeners.add(listener);
+    return () =&gt; { listeners.delete(listener); };
+};
+
+const getSnapshot = (): ThemeMode | undefined =&gt; preview;
+
+export const useThemePreview = (): ThemeMode | undefined =&gt;
+    useSyncExternalStore(subscribe, getSnapshot);
+</code></pre>
+
+        <h3 style="color: #58a6ff; margin: 24px 0 16px;">// 2. The Resolver: packages/ui-client/src/hooks/useThemeMode.ts</h3>
+<pre><code>export const useThemeMode = () =&gt; {
+    const previewMode = useThemePreview();
+    const savedMode = useUserPreference&lt;ThemeMode&gt;('themeAppearence') || 'auto';
+    const themeMode = previewMode ?? savedMode; // ⭐ Preview takes priority!
+    const isDarkMode = useDarkMode(themeMode === 'auto' ? undefined : themeMode === 'dark');
+
+    if (isDarkMode) return 'dark';
+    if (themeMode === 'high-contrast') return 'high-contrast';
+    return 'light';
+};
+</code></pre>
+
+        <h3 style="color: #58a6ff; margin: 24px 0 16px;">// 3. Settings View: packages/ui-account/src/accessibility/views/AccessibilityView.tsx</h3>
+<pre><code>const currentData = watch();
+const isThemeDirty = !!dirtyFields.themeAppearence;
+
+// Live preview effect with dirty gate
+useEffect(() =&gt; {
+    setThemePreview(isThemeDirty ? currentData.themeAppearence : undefined);
+}, [currentData.themeAppearence, isThemeDirty]);
+
+// Clean up preview if user unmounts/navigates away
+useEffect(() =&gt; () =&gt; setThemePreview(undefined), []);
+</code></pre>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toastbar" id="toastbar">
+    <span>✓</span>
+    <span id="toast-msg">Theme preferences saved successfully!</span>
+  </div>
+
+  <script>
+    // State simulating Rocket.Chat store logic
+    let savedTheme = 'light';
+    let previewTheme = undefined;
+    let isDirty = false;
+
+    // DOM Elements
+    const root = document.documentElement;
+    const radioInputs = document.querySelectorAll('input[name="theme-radio"]');
+    const radioCards = document.querySelectorAll('.theme-radio-card');
+    const btnCancel = document.getElementById('btn-cancel');
+    const btnSave = document.getElementById('btn-save');
+    const liveIndicator = document.getElementById('live-indicator');
+    const toastbar = document.getElementById('toastbar');
+    const toastMsg = document.getElementById('toast-msg');
+
+    // Tab switcher
+    const tabInteractive = document.getElementById('tab-interactive');
+    const tabCode = document.getElementById('tab-code');
+    const viewInteractive = document.getElementById('view-interactive');
+    const viewCode = document.getElementById('view-code');
+
+    tabInteractive.addEventListener('click', () => {
+      tabInteractive.classList.add('active');
+      tabCode.classList.remove('active');
+      viewInteractive.style.display = 'grid';
+      viewCode.classList.remove('active');
+    });
+
+    tabCode.addEventListener('click', () => {
+      tabCode.classList.add('active');
+      tabInteractive.classList.remove('active');
+      viewInteractive.style.display = 'none';
+      viewCode.classList.add('active');
+    });
+
+    // Theme resolver simulating useThemeMode()
+    function applyActiveTheme() {
+      const active = previewTheme !== undefined ? previewTheme : savedTheme;
+      let resolved = active;
+      if (active === 'auto') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        resolved = prefersDark ? 'dark' : 'light';
+      }
+      
+      root.setAttribute('data-theme', resolved);
+
+      // Update UI cards
+      radioCards.forEach(card => {
+        const val = card.getAttribute('data-val');
+        if (val === (previewTheme || savedTheme)) {
+          card.classList.add('selected');
+          card.querySelector('input').checked = true;
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+
+      // Update Live Indicator
+      if (previewTheme !== undefined) {
+        liveIndicator.textContent = `Preview: ${previewTheme.toUpperCase()}`;
+        liveIndicator.style.background = 'rgba(236, 13, 56, 0.15)';
+        liveIndicator.style.color = '#ec0d38';
+      } else {
+        liveIndicator.textContent = `Saved: ${savedTheme.toUpperCase()}`;
+        liveIndicator.style.background = 'rgba(45, 224, 165, 0.15)';
+        liveIndicator.style.color = '#2de0a5';
+      }
+
+      // Update button states
+      btnCancel.disabled = !isDirty;
+      btnSave.disabled = !isDirty;
+    }
+
+    // Radio change simulation
+    radioInputs.forEach(input => {
+      input.addEventListener('change', (e) => {
+        const selected = e.target.value;
+        isDirty = selected !== savedTheme;
+        previewTheme = isDirty ? selected : undefined;
+        applyActiveTheme();
+      });
+    });
+
+    // Cancel Button
+    btnCancel.addEventListener('click', () => {
+      previewTheme = undefined;
+      isDirty = false;
+      applyActiveTheme();
+      showToast('Theme preview cleared. Restored saved theme.');
+    });
+
+    // Save Changes Button
+    btnSave.addEventListener('click', () => {
+      if (previewTheme !== undefined) {
+        savedTheme = previewTheme;
+      }
+      previewTheme = undefined;
+      isDirty = false;
+      applyActiveTheme();
+      showToast(`Saved preference: ${savedTheme.toUpperCase()} theme permanently persisted!`);
+    });
+
+    // Reset Defaults
+    document.getElementById('reset-defaults-btn').addEventListener('click', () => {
+      savedTheme = 'light';
+      previewTheme = undefined;
+      isDirty = false;
+      applyActiveTheme();
+      showToast('Reset to default Light theme.');
+    });
+
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toastbar.classList.add('show');
+      setTimeout(() => {
+        toastbar.classList.remove('show');
+      }, 3500);
+    }
+
+    // Initialize
+    applyActiveTheme();
+  </script>
+</body>
+</html>
